@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at 12% 18%, rgba(242, 178, 68, 0.42), transparent 45%),
+    radial-gradient(circle at 85% 10%, rgba(43, 179, 212, 0.35), transparent 40%),
+    radial-gradient(circle at 50% 85%, rgba(240, 90, 110, 0.32), transparent 48%),
+    #fffaf2;
+}
+
+.arena-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.arena-bg::before,
+.arena-bg::after {
+  content: "";
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  filter: blur(0px);
+  opacity: 0.35;
+  z-index: 0;
+}
+
+.arena-bg::before {
+  top: -120px;
+  left: -80px;
+  background: radial-gradient(circle, rgba(242, 178, 68, 0.75), rgba(242, 178, 68, 0));
+}
+
+.arena-bg::after {
+  bottom: -140px;
+  right: -60px;
+  background: radial-gradient(circle, rgba(43, 179, 212, 0.55), rgba(43, 179, 212, 0));
+}
+
+.sticker {
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(211, 191, 159, 0.9);
+  border-radius: 26px;
+  box-shadow: 0 20px 45px rgba(73, 54, 33, 0.16);
+}
+
+.ribbon {
+  position: relative;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #f2b244, #f05a6e);
+  color: #1f1a12;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  box-shadow: 0 10px 20px rgba(240, 90, 110, 0.35);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: #f2b244;
+  color: #1f1a12;
+  font-weight: 800;
+  box-shadow: 0 6px 12px rgba(242, 178, 68, 0.5);
+}
+
+.blob {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 40% 60% 55% 45%;
+  filter: blur(0px);
+  opacity: 0.45;
+  z-index: 0;
+}
+
+.blob.one {
+  background: radial-gradient(circle at 30% 30%, #f05a6e, transparent 60%);
+  top: 12%;
+  right: 6%;
+}
+
+.blob.two {
+  background: radial-gradient(circle at 50% 50%, #4f6ef2, transparent 60%);
+  bottom: 8%;
+  left: 12%;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(211, 191, 159, 0.6);
+}
+
+.answer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.arena-button {
+  border-radius: 22px;
+  border: 2px solid rgba(211, 191, 159, 0.9);
+  box-shadow: 0 10px 20px rgba(73, 54, 33, 0.2);
+  background: transparent;
+}
