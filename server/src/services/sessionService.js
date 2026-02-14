@@ -1,7 +1,10 @@
 import { customAlphabet } from "nanoid";
 import { getQuiz } from "../db/index.js";
+import { containsProfanity } from "./profanity.js";
 
 const nanoid = customAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 6);
+const MAX_WORDS_PER_PLAYER = 5;
+const MAX_WORD_LENGTH = 24;
 
 const sessions = new Map();
 
@@ -24,7 +27,9 @@ function createSession(quizId, hostSocketId) {
     distribution: [],
     leaderboard: [],
     timer: null,
-    results: []
+    results: [],
+    wordCloudCounts: new Map(),
+    playerWords: new Map()
   };
   sessions.set(code, session);
   return session;
@@ -106,6 +111,14 @@ function buildStats(session) {
       avgResponseTime: Number(avgTime.toFixed(2))
     };
   });
+}
+
+function startWordCloud(session, io) {
+  if (session.phase !== "lobby") return null;
+  session.phase = "wordcloud";
+  const payload = getWordCloudPayload(session);
+  io.to(session.code).emit("game:wordcloud:start", payload);
+  return payload;
 }
 
 function startQuestion(session, io) {
@@ -259,6 +272,64 @@ function nextQuestion(session, io) {
   }
 }
 
+function normalizeWord(input) {
+  const raw = String(input || "").trim().toLowerCase();
+  const cleaned = raw
+    .replace(/[^\p{L}\p{N}\s'-]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return cleaned;
+}
+
+function getWordCloudPayload(session) {
+  const words = Array.from(session.wordCloudCounts.entries())
+    .map(([text, count]) => ({
+      text,
+      count,
+      weight: Math.min(8, 1 + Math.floor(Math.log2(count)))
+    }))
+    .sort((a, b) => b.count - a.count || a.text.localeCompare(b.text));
+
+  return {
+    words,
+    totalSubmissions: words.reduce((sum, item) => sum + item.count, 0)
+  };
+}
+
+function submitWord(session, socketId, word) {
+  if (session.phase !== "wordcloud") {
+    return { ok: false, reason: "not_wordcloud" };
+  }
+
+  const player = session.players.get(socketId);
+  if (!player) {
+    return { ok: false, reason: "invalid" };
+  }
+
+  const normalized = normalizeWord(word);
+  if (!normalized || normalized.length > MAX_WORD_LENGTH) {
+    return { ok: false, reason: "invalid" };
+  }
+
+  if (containsProfanity(normalized)) {
+    return { ok: false, reason: "profane" };
+  }
+
+  const playerKey = player.nickname;
+  const submitted = session.playerWords.get(playerKey) || [];
+  if (submitted.length >= MAX_WORDS_PER_PLAYER) {
+    return { ok: false, reason: "limit_reached" };
+  }
+
+  submitted.push(normalized);
+  session.playerWords.set(playerKey, submitted);
+
+  const previousCount = session.wordCloudCounts.get(normalized) || 0;
+  session.wordCloudCounts.set(normalized, previousCount + 1);
+
+  return { ok: true };
+}
+
 export {
   sessions,
   createSession,
@@ -267,9 +338,12 @@ export {
   listActiveSessionByQuiz,
   ensurePlayer,
   leaderboardFor,
+  startWordCloud,
   startQuestion,
   endQuestion,
   answerQuestion,
   nextQuestion,
-  buildStats
+  buildStats,
+  getWordCloudPayload,
+  submitWord
 };

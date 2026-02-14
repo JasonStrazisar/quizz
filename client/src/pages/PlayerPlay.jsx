@@ -18,6 +18,9 @@ export default function PlayerPlay() {
   const [status, setStatus] = useState("waiting");
   const [selected, setSelected] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+  const [wordInput, setWordInput] = useState("");
+  const [wordFeedback, setWordFeedback] = useState("");
+  const [wordCount, setWordCount] = useState(0);
   const { question, answers, phase, setPhase, setQuestion, setPlayer } = useGameStore();
 
   useEffect(() => {
@@ -28,6 +31,7 @@ export default function PlayerPlay() {
     function onQuestion(payload) {
       setSelected([]);
       setSubmitted(false);
+      setWordFeedback("");
       setPhase("question");
       setQuestion(payload);
       setStatus("question");
@@ -50,20 +54,59 @@ export default function PlayerPlay() {
       setStatus("final");
     }
 
+    function onWordCloudStart() {
+      setPhase("wordcloud");
+      setStatus("wordcloud");
+      setWordFeedback("");
+    }
+
+    function onWordResult(payload) {
+      if (!payload.ok) {
+        if (payload.reason === "limit_reached") {
+          setWordFeedback("Limite atteinte: 5 mots maximum.");
+          return;
+        }
+        if (payload.reason === "profane") {
+          setWordFeedback("Mot refusé: contenu inapproprié.");
+          return;
+        }
+        if (payload.reason === "not_wordcloud") {
+          setWordFeedback("La partie a commencé.");
+          return;
+        }
+        setWordFeedback("Mot invalide.");
+        return;
+      }
+
+      setWordInput("");
+      setWordFeedback("Mot envoyé anonymement.");
+    }
+
+    function onWordCloudUpdate(payload) {
+      setWordCount(payload.totalSubmissions || 0);
+    }
+
     socket.on("game:question", onQuestion);
     socket.on("player:answer-feedback", onFeedback);
     socket.on("game:question-results", onResults);
     socket.on("game:final-results", onFinal);
+    socket.on("game:wordcloud:start", onWordCloudStart);
+    socket.on("player:word-submit-result", onWordResult);
+    socket.on("lobby:wordcloud:update", onWordCloudUpdate);
     socket.on("connect", handleConnect);
+    if (socket.connected) handleConnect();
 
     return () => {
       socket.off("game:question", onQuestion);
       socket.off("player:answer-feedback", onFeedback);
       socket.off("game:question-results", onResults);
       socket.off("game:final-results", onFinal);
+      socket.off("game:wordcloud:start", onWordCloudStart);
+      socket.off("player:word-submit-result", onWordResult);
+      socket.off("lobby:wordcloud:update", onWordCloudUpdate);
       socket.off("connect", handleConnect);
     };
-  }, [socket, setPhase, setQuestion, setPlayer]);
+  }, [socket, code, nickname, setPhase, setQuestion, setPlayer]);
 
   function toggleAnswer(answerId) {
     if (submitted) return;
@@ -78,27 +121,60 @@ export default function PlayerPlay() {
     socket.emit("player:answer", { code, questionId: question?.id, answerIds: selected });
   }
 
+  function submitWord(e) {
+    e.preventDefault();
+    if (!wordInput.trim()) {
+      setWordFeedback("Entre un mot.");
+      return;
+    }
+    socket.emit("player:word-submit", { code, word: wordInput });
+  }
+
   const header = useMemo(() => {
     if (status === "correct") return "Bonne réponse !";
     if (status === "incorrect") return "Oups !";
+    if (status === "wordcloud") return "Nuage de mots";
     if (status === "final") return "Résultats finaux";
     return "En attente";
   }, [status]);
 
   return (
     <div className="min-h-screen arena-bg px-6 py-10">
-      <div className="blob one" />
-      <div className="blob two" />
       <div className="relative z-10">
         <div className="text-center mb-8">
           <span className="badge">Joueur</span>
-          <h1 className="text-3xl font-display mt-3 text-base-800">{header}</h1>
-          <p className="text-base-800/70">{nickname}</p>
+          <h1 className="text-3xl font-display mt-3 text-white">{header}</h1>
+          <p className="text-white/60">{nickname}</p>
         </div>
 
         {status === "waiting" && (
           <div className="sticker p-8 text-center">
-            <p className="text-lg text-base-800">Le coach prépare la prochaine question...</p>
+            <p className="text-lg text-white">Le coach prépare la prochaine question...</p>
+          </div>
+        )}
+
+        {phase === "wordcloud" && (
+          <div className="sticker p-8 md:p-10">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-3xl font-display text-white">Étape 1 · Nuage anonyme</h2>
+              <span className="badge">{wordCount} mots</span>
+            </div>
+            <p className="mb-6 text-white/60">
+              Propose un mot anonyme. Le coach verra le nuage en direct sur son écran.
+            </p>
+            <form onSubmit={submitWord} className="mx-auto flex max-w-2xl gap-3">
+              <input
+                className="flex-1 rounded-full bg-white/5 border border-white/10 px-5 py-4 text-lg text-white placeholder:text-white/35 focus:outline-none focus:ring-2 focus:ring-ffl-red/50 focus:border-ffl-red/50"
+                placeholder="Ton mot"
+                value={wordInput}
+                maxLength={24}
+                onChange={(e) => setWordInput(e.target.value)}
+              />
+              <button className="arena-button bg-ffl-red px-6 py-4 font-bold uppercase tracking-wider text-white">
+                Envoyer
+              </button>
+            </form>
+            <p className="mt-4 text-center text-sm text-white/70">{wordFeedback || "5 mots max par joueur."}</p>
           </div>
         )}
 
@@ -128,7 +204,7 @@ export default function PlayerPlay() {
             </div>
             <button
               onClick={submitAnswers}
-              className="arena-button w-full bg-arena-green px-4 py-3 text-lg font-semibold text-base-800 shadow-glow disabled:opacity-50"
+              className="arena-button w-full bg-ffl-red px-4 py-3 text-lg font-bold text-white tracking-wider uppercase disabled:opacity-50"
               disabled={submitted || selected.length === 0}
             >
               {submitted ? "Verrouillé !" : "Valider"}
@@ -138,17 +214,17 @@ export default function PlayerPlay() {
 
         {(status === "correct" || status === "incorrect") && (
           <div className="sticker p-8 text-center">
-            <p className="text-2xl font-display mb-2 text-base-800">
-              {status === "correct" ? "Bien joué !" : "Essaie encore !"}
+            <p className="text-2xl font-display mb-2 text-white">
+              {status === "correct" ? "Bien joué !" : "Bien essayé"}
             </p>
-            <p className="text-base-800/70">Regarde l'écran du coach pour les scores.</p>
+            <p className="text-white/60">Regarde l'écran du coach pour les scores.</p>
           </div>
         )}
 
         {status === "final" && (
           <div className="sticker p-8 text-center">
             <span className="ribbon">Fin du match</span>
-            <p className="text-xl mt-4 text-base-800">Merci d'avoir joué !</p>
+            <p className="text-xl mt-4 text-white">Merci d'avoir joué !</p>
           </div>
         )}
       </div>

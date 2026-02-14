@@ -19,11 +19,16 @@ export default {
           red: "#e45757",
           sand: "#f0d9b5",
           ink: "#2b241b"
+        },
+        ffl: {
+          navy: "#1B1B3B",
+          red: "#E61937",
+          white: "#FFFFFF"
         }
       },
       fontFamily: {
-        display: ["'Fredoka'", "ui-sans-serif", "system-ui"],
-        body: ["'Manrope'", "ui-sans-serif", "system-ui"]
+        display: ["'Dazzle'", "ui-sans-serif", "system-ui"],
+        body: ["'YD Yoonche'", "ui-sans-serif", "system-ui"]
       },
       boxShadow: {
         paper: "0 20px 45px rgba(109, 88, 64, 0.12)",

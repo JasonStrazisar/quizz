@@ -3,10 +3,13 @@ import {
   createSession,
   ensurePlayer,
   getSession,
+  getWordCloudPayload,
   listActiveSessionByQuiz,
   nextQuestion,
   removeSession,
-  startQuestion
+  startWordCloud,
+  startQuestion,
+  submitWord
 } from "../services/sessionService.js";
 
 export default function registerSocket(io) {
@@ -16,12 +19,20 @@ export default function registerSocket(io) {
       if (byCode) {
         socket.join(byCode.code);
         socket.emit("session:created", { sessionId: byCode.id, code: byCode.code });
+        socket.emit("lobby:wordcloud:update", getWordCloudPayload(byCode));
+        if (byCode.phase === "wordcloud") {
+          socket.emit("game:wordcloud:start", getWordCloudPayload(byCode));
+        }
         return;
       }
       const existing = listActiveSessionByQuiz(quizId);
       if (existing) {
         socket.join(existing.code);
         socket.emit("session:created", { sessionId: existing.id, code: existing.code });
+        socket.emit("lobby:wordcloud:update", getWordCloudPayload(existing));
+        if (existing.phase === "wordcloud") {
+          socket.emit("game:wordcloud:start", getWordCloudPayload(existing));
+        }
         return;
       }
       const session = createSession(quizId, socket.id);
@@ -31,6 +42,7 @@ export default function registerSocket(io) {
       }
       socket.join(session.code);
       socket.emit("session:created", { sessionId: session.id, code: session.code });
+      socket.emit("lobby:wordcloud:update", getWordCloudPayload(session));
     });
 
     socket.on("player:join", ({ code, nickname }) => {
@@ -41,7 +53,7 @@ export default function registerSocket(io) {
       }
 
       const existing = Array.from(session.players.values()).some((p) => p.nickname === nickname);
-      if (session.phase !== "lobby" && !existing) {
+      if (!["lobby", "wordcloud"].includes(session.phase) && !existing) {
         socket.emit("error", { message: "Game already started" });
         return;
       }
@@ -53,6 +65,7 @@ export default function registerSocket(io) {
         playerCount: session.players.size,
         color: player.color
       });
+      socket.emit("lobby:wordcloud:update", getWordCloudPayload(session));
 
       if (session.phase === "question") {
         const question = session.quiz.questions[session.currentQuestionIndex];
@@ -73,6 +86,10 @@ export default function registerSocket(io) {
           index: session.currentQuestionIndex,
           total: session.quiz.questions.length
         });
+      }
+
+      if (session.phase === "wordcloud") {
+        socket.emit("game:wordcloud:start", getWordCloudPayload(session));
       }
 
       if (session.phase === "results") {
@@ -99,7 +116,27 @@ export default function registerSocket(io) {
     socket.on("host:start-game", ({ code }) => {
       const session = getSession(code);
       if (!session) return;
+      startWordCloud(session, io);
+    });
+
+    socket.on("host:continue-to-question", ({ code }) => {
+      const session = getSession(code);
+      if (!session || session.phase !== "wordcloud") return;
       startQuestion(session, io);
+    });
+
+    socket.on("player:word-submit", ({ code, word }) => {
+      const session = getSession(code);
+      if (!session) {
+        socket.emit("player:word-submit-result", { ok: false, reason: "invalid" });
+        return;
+      }
+
+      const result = submitWord(session, socket.id, word);
+      socket.emit("player:word-submit-result", result);
+      if (!result.ok) return;
+
+      io.to(code).emit("lobby:wordcloud:update", getWordCloudPayload(session));
     });
 
     socket.on("host:next-question", ({ code }) => {
