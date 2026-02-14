@@ -154,23 +154,23 @@ export default function PlayerPlay() {
         )}
 
         {phase === "wordcloud" && (
-          <div className="sticker p-8 md:p-10">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-3xl font-display text-white">Étape 1 · Nuage anonyme</h2>
-              <span className="badge">{wordCount} mots</span>
+          <div className="sticker p-5 sm:p-8 md:p-10">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <h2 className="text-2xl sm:text-3xl font-display text-white">Étape 1 · Nuage anonyme</h2>
+              <span className="badge w-fit">{wordCount} mots</span>
             </div>
-            <p className="mb-6 text-white/60">
+            <p className="mb-6 text-sm sm:text-base text-white/60">
               Propose un mot anonyme. Le coach verra le nuage en direct sur son écran.
             </p>
-            <form onSubmit={submitWord} className="mx-auto flex max-w-2xl gap-3">
+            <form onSubmit={submitWord} className="mx-auto flex w-full max-w-2xl flex-col gap-3 sm:flex-row">
               <input
-                className="flex-1 rounded-full bg-white/5 border border-white/10 px-5 py-4 text-lg text-white placeholder:text-white/35 focus:outline-none focus:ring-2 focus:ring-ffl-red/50 focus:border-ffl-red/50"
+                className="w-full flex-1 rounded-full bg-white/5 border border-white/10 px-4 sm:px-5 py-3 sm:py-4 text-base sm:text-lg text-white placeholder:text-white/35 focus:outline-none focus:ring-2 focus:ring-ffl-red/50 focus:border-ffl-red/50"
                 placeholder="Ton mot"
                 value={wordInput}
                 maxLength={24}
                 onChange={(e) => setWordInput(e.target.value)}
               />
-              <button className="arena-button bg-ffl-red px-6 py-4 font-bold uppercase tracking-wider text-white">
+              <button className="arena-button w-full sm:w-auto bg-ffl-red px-6 py-3 sm:py-4 font-bold uppercase tracking-wider text-white">
                 Envoyer
               </button>
             </form>
