@@ -64,19 +64,246 @@ const fixedQuiz = {
   cover_image: "",
   questions: [
     {
-      text: "Bonjour — Pour dire bonjour, ton entraineur/animateur peut...",
+      text: "Dans quels cas il n’y a pas de consentement lors d’un acte sexuel ?",
+      hint: "Respect",
+      explanation_part1: "Le consentement doit être libre, éclairé et sans contrainte.",
+      explanation_part2: "La peur, la pression, le silence ambigu ou l’alcool/drogue empêchent un consentement valable.",
+      image: "consent_conditions_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "La peur et la surprise", is_correct: true },
+        { text: "Le chantage et la pression", is_correct: true },
+        { text: "Le silence et le ni 'oui-ni non'", is_correct: true },
+        { text: "Le oui réciproque", is_correct: false },
+        { text: "La drogue et l’alcool", is_correct: true }
+      ]
+    },
+    {
+      text: "Quel est l’âge du consentement sexuel ?",
+      hint: "Moins de 15 ans, c’est non",
+      explanation_part1: "Avant 15 ans, la loi considère que tu es trop jeune pour dire OUI.",
+      explanation_part2: "Après 15 ans, les rapports sexuels sont autorisés sauf si l’adulte a une relation d’autorité sur toi.",
+      image: "age_of_consent_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "12 ans", is_correct: false },
+        { text: "15 ans", is_correct: true },
+        { text: "18 ans", is_correct: false },
+        { text: "20 ans", is_correct: false }
+      ]
+    },
+    {
+      text: "Une fille peut-elle faire du sport quand elle a ses règles ?",
+      hint: "Non aux discriminations",
+      explanation_part1: "Oui ! Les filles peuvent faire du sport pendant leurs règles.",
+      explanation_part2: "Cela peut demander un effort supplémentaire. Si tu es concernée, tu peux demander un aménagement ; l’entraîneur doit te respecter.",
+      image: "periods_sport_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "Oui", is_correct: true },
+        { text: "Non", is_correct: false }
+      ]
+    },
+    {
+      text: "Pour rigoler, as-tu le droit de mettre un doigt dans les fesses d’un copain ou d’une copine même à travers les vêtements ?",
       hint: "Ton corps t'appartient",
-      explanation_part1: "Personne ne peut t'imposer un contact physique sans ton accord",
-      explanation_part2: "Tu as le droit de dire non",
+      explanation_part1: "Personne n’a le droit de toucher tes parties intimes sans ton consentement même pour jouer.",
+      explanation_part2: "C’est puni par la loi.",
+      image: "intimate_touch_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "Oui", is_correct: false },
+        { text: "Non", is_correct: true }
+      ]
+    },
+    {
+      text: "Pour faire partie d’un groupe, es-tu obligé de boire une quantité importante d’alcool ou de chanter sur une estrade ?",
+      hint: "Stop au bizutage",
+      explanation_part1: "Obliger une personne à réaliser une action pour intégrer un groupe est un bizutage.",
+      explanation_part2: "C’est puni par la loi. Il n’y a pas de bizutage gentil.",
+      image: "hazing_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "Oui", is_correct: false },
+        { text: "Non", is_correct: true }
+      ]
+    },
+    {
+      text: "Dans un groupe, tu entends une personne dire : « T’as vu la lopsa. Elle est là que pour pécho. » Quelle est ta réaction ?",
+      hint: "Non aux discriminations",
+      explanation_part1: "Le mieux est l’argumentation pour expliquer pourquoi cette remarque est sexiste.",
+      explanation_part2: "Il est important de donner son avis quand le groupe raconte n’importe quoi.",
+      image: "sexist_remark_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "Tu laisses dire", is_correct: false },
+        { text: "Tu rajoutes une remarque", is_correct: false },
+        { text: "Tu interviens en changeant de sujet", is_correct: false },
+        { text: "Tu fais une blague en rigolant", is_correct: false },
+        { text: "Tu argumentes pour contrer", is_correct: true }
+      ]
+    },
+    {
+      text: "As-tu le droit de dire ou d’écrire à une personne « Bâtard », « T’es triso », « T’es fraiche », « Tapette », « Sale juif », « Gros tas », « Bigleux » ?",
+      hint: "Non aux discriminations",
+      explanation_part1: "Tu n’as pas le droit de les dire, et personne n’a le droit de te les dire.",
+      explanation_part2: "Ce sont des propos injurieux, racistes, antisémites, homophobes et sexistes. C’est puni par la loi.",
+      image: "discriminatory_words_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "Oui", is_correct: false },
+        { text: "Non", is_correct: true }
+      ]
+    },
+    {
+      text: "Un camarade profite des réseaux sociaux pour : t’insulter, te menacer, t’envoyer des messages/images humiliants, diffuser des photos de toi dénudé sans ton accord. Que fais-tu ?",
+      hint: "Ne reste pas seul",
+      explanation_part1: "Le mieux est d’en parler à une personne de confiance.",
+      explanation_part2: "Contacte le 3018 via le tchat. Gratuit – Anonyme – Confidentiel.",
+      image: "cyberbullying_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "Tu as peur", is_correct: false },
+        { text: "Tu arrêtes l’activité", is_correct: true },
+        { text: "Tu t’isoles et tu pleures", is_correct: false },
+        { text: "Tu te venges", is_correct: false },
+        { text: "Tu en parles à une personne de confiance", is_correct: true }
+      ]
+    },
+    {
+      text: "Si je dois rentrer chez moi en voiture avec mon entraîneur/animateur, je m’assoie :",
+      hint: "Ton corps t'appartient",
+      explanation_part1: "Pour ta sécurité et éviter les gestes malveillants, il est préférable de t’asseoir à l’arrière.",
+      explanation_part2: "N’oublie pas de boucler ta ceinture !",
+      image: "car_back_seat_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "À l’avant, à côté du conducteur", is_correct: false },
+        { text: "À l’arrière", is_correct: true },
+        { text: "Dans le coffre", is_correct: false }
+      ]
+    },  
+    {
+      text: "Vestiaires — Peux-tu rester seul dans les vestiaires avec un adulte ?",
+      hint: "Ton corps t'appartient",
+      explanation_part1: "Un adulte n’a pas à être présent seul avec un jeune, dans les vestiaires ou sous la douche. Sauf en cas d’accident.",
+      explanation_part2: "Pour se confier ou lors d’un entretien, c’est mieux de se rencontrer dans un bureau entrouvert.",
+      image: "vestiaires_lockers_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "Oui", is_correct: false },
+        { text: "Non", is_correct: true }
+      ]
+    },
+    {
+      text: "Douche — Peux-tu, après l’entraînement ou le match, prendre une douche avec ton maillot de bain ?",
+      hint: "Ton corps t'appartient",
+      explanation_part1: "Ta nudité et ta pudeur t’appartiennent.",
+      explanation_part2: "Personne ne peut te forcer à prendre une douche nu. N’oublie pas ta serviette : ta nudité peut gêner un copain et elle te protège aussi des photos envoyées sur internet.",
+      image: "shower_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "Oui", is_correct: true },
+        { text: "Non", is_correct: false }
+      ]
+    },
+    {
+      text: "Activités — Sous prétexte de te motiver, ton entraîneur/animateur te pousse : « Mais t’es faible », « Que t’es nul-le », « Tu me déçois, je pensais que tu étais plus fort-e »… Comment réagis-tu ?",
+      hint: "Non au harcèlement",
+      explanation_part1: "Pour te faire réagir et te motiver, il-elle aurait pu t’encourager plutôt que t’abaisser car tu te sens blessé-e qu’il-elle ait pu penser ça de toi.",
+      explanation_part2: "Abaisser, humilier, de façon répétée est interdit par la loi. C’est du harcèlement moral.",
+      image: "running_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "Tu t’élances et tu lui montres le contraire", is_correct: false },
+        { text: "Tu as peur et tu perds tes moyens, résultat tu fais n’importe quoi", is_correct: true }
+      ]
+    },
+    {
+      text: "Activités — Sans mon accord, mon entraîneur/animateur peut-il m’imposer une aide par contact physique ?",
+      hint: "Ton corps t'appartient",
+      explanation_part1: "L’adulte, pour des raisons techniques et de sécurité doit te demander ton accord et t’expliquer comment il va te tenir.",
+      explanation_part2: "Tu as le droit de refuser et de dialoguer car tu peux être mal à l’aise avec ce contact.",
+      image: "wrestling_support_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "Oui", is_correct: false },
+        { text: "Non", is_correct: true }
+      ]
+    },
+    {
+      text: "Activités — Ton entraîneur/animateur te demande de poursuivre ton entraînement alors que tu as mal, parce que tu t’es blessé-e, et contre l’avis médical. Que fais-tu ?",
+      hint: "Ton corps t'appartient",
+      explanation_part1: "C’est important de respecter ton corps et l’avis médical.",
+      explanation_part2: "Ce n’est pas être faible que de respecter ton corps et l’avis médical. Cela te permettra de revenir plus fort encore après la guérison.",
+      image: "injury_medical_scene",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "Tu continues à t’entraîner malgré la douleur parce que l’entraîneur te le demande", is_correct: false },
+        { text: "Tu dis non et tu demandes un autre programme adapté à tes douleurs et ta blessure", is_correct: true }
+      ]
+    },
+    {
+      text: "Aide — Besoin d’aide, connais-tu le numéro d’« enfance en danger » ?",
+      hint: "Stop au silence ! Fais le 119",
+      explanation_part1: "Si tu vis ou assistes à une situation anormale",
+      explanation_part2: "Surtout n’hésite pas à appeler le 119. Gratuit – Anonyme – Confidentiel. Tu auras des conseils et de l’aide.",
+      image: "119_help_screen",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "110", is_correct: false },
+        { text: "119", is_correct: true },
+        { text: "999", is_correct: false },
+        { text: "09091", is_correct: false }
+      ]
+    },
+    {
+      text: "Corps — Voici des parties de ton corps. Trouve celles que personne n’a le droit de toucher !",
+      hint: "Ton corps t'appartient",
+      explanation_part1: "Toucher tes parties intimes sans ton accord est interdit.",
+      explanation_part2: "C’est puni par la loi.",
+      image: "body_parts_selection",
+      time_limit: 20,
+      points: 1000,
+      answers: [
+        { text: "La bouche", is_correct: true },
+        { text: "Les pieds", is_correct: false },
+        { text: "L’entrejambe", is_correct: true },
+        { text: "Le sexe", is_correct: true },
+        { text: "Les fesses", is_correct: true },
+        { text: "La poitrine", is_correct: true },
+        { text: "Le bas ventre", is_correct: true },
+        { text: "Les oreilles", is_correct: false }
+      ]
+    },  
+    {
+      text: "Aide — Besoin d'aide, connais-tu le numéro d'\"enfance en danger\" ?",
+      hint: "Stop au silence ! Fais le 119",
+      explanation_part1: "Si tu vis ou assistes à une situation anormale",
+      explanation_part2: "Surtout n'hésite pas à appeler le 119",
       image: "",
       time_limit: 20,
       points: 1000,
       answers: [
-        { text: "Te serrer contre lui", is_correct: false },
-        { text: "Te serrer la main", is_correct: true },
-        { text: "Te faire un check", is_correct: true },
-        { text: "Te faire des bises", is_correct: false },
-        { text: "Te dire bonjour/salut", is_correct: true }
+        { text: "110", is_correct: false },
+        { text: "119", is_correct: true },
+        { text: "999", is_correct: false },
+        { text: "09091", is_correct: false }
       ]
     },
     {
@@ -98,18 +325,19 @@ const fixedQuiz = {
       ]
     },
     {
-      text: "Aide — Besoin d'aide, connais-tu le numéro d'\"enfance en danger\" ?",
-      hint: "Stop au silence ! Fais le 119",
-      explanation_part1: "Si tu vis ou assistes à une situation anormale",
-      explanation_part2: "Surtout n'hésite pas à appeler le 119",
+      text: "Bonjour — Pour dire bonjour, ton entraineur/animateur peut...",
+      hint: "Ton corps t'appartient",
+      explanation_part1: "Personne ne peut t'imposer un contact physique sans ton accord",
+      explanation_part2: "Tu as le droit de dire non",
       image: "",
       time_limit: 20,
       points: 1000,
       answers: [
-        { text: "110", is_correct: false },
-        { text: "119", is_correct: true },
-        { text: "999", is_correct: false },
-        { text: "09091", is_correct: false }
+        { text: "Te serrer contre lui", is_correct: false },
+        { text: "Te serrer la main", is_correct: true },
+        { text: "Te faire un check", is_correct: true },
+        { text: "Te faire des bises", is_correct: false },
+        { text: "Te dire bonjour/salut", is_correct: true }
       ]
     }
   ]
@@ -194,7 +422,7 @@ function insertQuiz(quiz) {
     insertQuestion.run(
       qId,
       quizId,
-      qIndex,
+      quiz.questions.length - 1 - qIndex,
       q.text,
       q.hint || "",
       q.explanation_part1 || "",
@@ -236,7 +464,7 @@ function updateQuiz(id, quiz) {
     insertQuestion.run(
       qId,
       id,
-      qIndex,
+      quiz.questions.length - 1 - qIndex,
       q.text,
       q.hint || "",
       q.explanation_part1 || "",
@@ -307,16 +535,6 @@ if (count === 0) {
   clearAll();
   insertQuiz(fixedQuiz);
 } else {
-  const updateQuestion = db.prepare(
-    "UPDATE question SET hint = ?, explanation_part1 = ?, explanation_part2 = ? WHERE quiz_id = ? AND order_index = ?"
-  );
-  fixedQuiz.questions.forEach((q, idx) => {
-    updateQuestion.run(
-      q.hint || "",
-      q.explanation_part1 || "",
-      q.explanation_part2 || "",
-      "fixed-quiz",
-      idx
-    );
-  });
+  clearAll();
+  insertQuiz(fixedQuiz);
 }

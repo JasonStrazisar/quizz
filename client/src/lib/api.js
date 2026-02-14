@@ -19,6 +19,9 @@ async function request(path, options = {}) {
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      localStorage.removeItem("quizrush_token");
+    }
     const message = await res.text();
     throw new Error(message || `Request failed: ${res.status}`);
   }

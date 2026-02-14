@@ -31,7 +31,7 @@ export default function TimerRing({ duration, onComplete, compact = false }) {
     <div className="flex items-center gap-3">
       <div className="relative flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="-rotate-90">
-          <circle cx={center} cy={center} r={radius} stroke="#e4d6c0" strokeWidth={stroke} fill="none" />
+          <circle cx={center} cy={center} r={radius} stroke="rgba(255,255,255,0.15)" strokeWidth={stroke} fill="none" />
         <circle
           cx={center}
           cy={center}
@@ -44,12 +44,12 @@ export default function TimerRing({ duration, onComplete, compact = false }) {
           strokeLinecap="round"
         />
         </svg>
-        <div className={`absolute text-base-800 font-display font-semibold ${compact ? "text-lg" : "text-3xl"}`}>
+        <div className={`absolute text-white font-display font-semibold ${compact ? "text-lg" : "text-3xl"}`}>
           {Math.ceil(remaining)}
         </div>
       </div>
       {!compact && (
-        <div className="text-xs uppercase tracking-[0.3em] text-base-800/60">Secondes</div>
+        <div className="text-xs uppercase tracking-[0.3em] text-white/60">Secondes</div>
       )}
     </div>
   );
