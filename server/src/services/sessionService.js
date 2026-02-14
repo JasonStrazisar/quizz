@@ -5,6 +5,7 @@ import { containsProfanity } from "./profanity.js";
 const nanoid = customAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 6);
 const MAX_WORDS_PER_PLAYER = 5;
 const MAX_WORD_LENGTH = 24;
+const HOST_RECONNECT_GRACE_MS = 120_000;
 
 const sessions = new Map();
 
@@ -27,6 +28,8 @@ function createSession(quizId, hostSocketId) {
     distribution: [],
     leaderboard: [],
     timer: null,
+    hostDisconnectTimer: null,
+    hostDisconnectedAt: null,
     results: [],
     wordCloudCounts: new Map(),
     playerWords: new Map()
@@ -42,6 +45,7 @@ function getSession(code) {
 function removeSession(code) {
   const session = sessions.get(code);
   if (session?.timer) clearTimeout(session.timer);
+  if (session?.hostDisconnectTimer) clearTimeout(session.hostDisconnectTimer);
   sessions.delete(code);
 }
 
@@ -81,6 +85,39 @@ function ensurePlayer(session, socketId, nickname) {
   };
   session.players.set(socketId, player);
   return player;
+}
+
+function setHost(session, socketId) {
+  session.hostSocketId = socketId;
+  session.hostDisconnectedAt = null;
+  if (session.hostDisconnectTimer) {
+    clearTimeout(session.hostDisconnectTimer);
+    session.hostDisconnectTimer = null;
+  }
+}
+
+function scheduleHostCleanup(session, onExpire) {
+  if (session.hostDisconnectTimer) {
+    clearTimeout(session.hostDisconnectTimer);
+  }
+  session.hostDisconnectedAt = Date.now();
+  session.hostDisconnectTimer = setTimeout(() => {
+    session.hostDisconnectTimer = null;
+    onExpire();
+  }, HOST_RECONNECT_GRACE_MS);
+}
+
+function hostViewState(session) {
+  const players = Array.from(session.players.values()).map((player) => ({
+    nickname: player.nickname,
+    color: player.color,
+    connected: player.connected !== false
+  }));
+  return {
+    players,
+    playerCount: players.length,
+    phase: session.phase
+  };
 }
 
 function leaderboardFor(session) {
@@ -337,6 +374,9 @@ export {
   removeSession,
   listActiveSessionByQuiz,
   ensurePlayer,
+  setHost,
+  scheduleHostCleanup,
+  hostViewState,
   leaderboardFor,
   startWordCloud,
   startQuestion,

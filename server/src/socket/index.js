@@ -4,9 +4,12 @@ import {
   ensurePlayer,
   getSession,
   getWordCloudPayload,
+  hostViewState,
   listActiveSessionByQuiz,
   nextQuestion,
   removeSession,
+  scheduleHostCleanup,
+  setHost,
   startWordCloud,
   startQuestion,
   submitWord
@@ -17,8 +20,13 @@ export default function registerSocket(io) {
     socket.on("host:create-session", ({ quizId }) => {
       const byCode = getSession(quizId);
       if (byCode) {
+        setHost(byCode, socket.id);
         socket.join(byCode.code);
-        socket.emit("session:created", { sessionId: byCode.id, code: byCode.code });
+        socket.emit("session:created", {
+          sessionId: byCode.id,
+          code: byCode.code,
+          ...hostViewState(byCode)
+        });
         socket.emit("lobby:wordcloud:update", getWordCloudPayload(byCode));
         if (byCode.phase === "wordcloud") {
           socket.emit("game:wordcloud:start", getWordCloudPayload(byCode));
@@ -27,8 +35,13 @@ export default function registerSocket(io) {
       }
       const existing = listActiveSessionByQuiz(quizId);
       if (existing) {
+        setHost(existing, socket.id);
         socket.join(existing.code);
-        socket.emit("session:created", { sessionId: existing.id, code: existing.code });
+        socket.emit("session:created", {
+          sessionId: existing.id,
+          code: existing.code,
+          ...hostViewState(existing)
+        });
         socket.emit("lobby:wordcloud:update", getWordCloudPayload(existing));
         if (existing.phase === "wordcloud") {
           socket.emit("game:wordcloud:start", getWordCloudPayload(existing));
@@ -40,8 +53,13 @@ export default function registerSocket(io) {
         socket.emit("error", { message: "Quiz not found" });
         return;
       }
+      setHost(session, socket.id);
       socket.join(session.code);
-      socket.emit("session:created", { sessionId: session.id, code: session.code });
+      socket.emit("session:created", {
+        sessionId: session.id,
+        code: session.code,
+        ...hostViewState(session)
+      });
       socket.emit("lobby:wordcloud:update", getWordCloudPayload(session));
     });
 
@@ -166,8 +184,10 @@ export default function registerSocket(io) {
           const active = getSession(session);
           if (!active) continue;
           if (active.hostSocketId === socket.id) {
-            io.to(active.code).emit("error", { message: "Host disconnected" });
-            removeSession(active.code);
+            scheduleHostCleanup(active, () => {
+              io.to(active.code).emit("error", { message: "Session fermée (hôte absent)." });
+              removeSession(active.code);
+            });
             continue;
           }
           if (active.players.has(socket.id)) {

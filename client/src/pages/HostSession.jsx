@@ -64,18 +64,31 @@ export default function HostSession() {
 
     function onCreated(payload) {
       setStatus("ready");
-      setPlayers([]);
+      setPlayers(
+        (payload.players || []).map((player) => ({
+          nickname: player.nickname,
+          color: player.color
+        }))
+      );
       setWordCloud([]);
       setWordSubmissions(0);
-      setPhase("lobby");
+      setPhase(payload.phase || "lobby");
       setLocalCode(payload.code);
+      if (payload.playerCount != null) {
+        setAnswerStats({ answeredCount, totalPlayers: payload.playerCount });
+      }
       if (payload.code !== code) {
         window.history.replaceState(null, "", `/session/${payload.code}/host`);
       }
     }
 
     function onPlayerJoined(payload) {
-      setPlayers((prev) => [...prev, { nickname: payload.nickname, color: payload.color }]);
+      setPlayers((prev) => {
+        if (prev.some((player) => player.nickname === payload.nickname)) {
+          return prev;
+        }
+        return [...prev, { nickname: payload.nickname, color: payload.color }];
+      });
       if (payload.playerCount != null) {
         setAnswerStats({ answeredCount, totalPlayers: payload.playerCount });
       }
