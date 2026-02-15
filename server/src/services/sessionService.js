@@ -207,14 +207,20 @@ function endQuestion(session, io) {
     clearTimeout(session.timer);
     session.timer = null;
   }
-  session.phase = "explanation";
-  const question = session.quiz.questions[session.currentQuestionIndex];
-  const correctAnswers = question.answers.filter((a) => a.is_correct).map((a) => a.text);
-  io.to(session.code).emit("game:explanation", {
-    correctAnswers,
-    hint: question.hint || "",
-    part1: question.explanation_part1 || "",
-    part2: question.explanation_part2 || ""
+  session.phase = "results";
+  const connectedCount = Array.from(session.players.values()).filter((p) => p.connected !== false).length;
+  const totalPlayers = connectedCount || 1;
+  session.distribution = session.distribution.map((item) => ({
+    ...item,
+    percent: Math.round((item.count / totalPlayers) * 100)
+  }));
+
+  const leaderboard = leaderboardFor(session);
+  session.leaderboard = leaderboard;
+
+  io.to(session.code).emit("game:question-results", {
+    distribution: session.distribution,
+    leaderboard
   });
 }
 
@@ -273,26 +279,19 @@ function nextQuestion(session, io) {
     endQuestion(session, io);
     return;
   }
-  if (session.phase === "explanation") {
-    session.phase = "results";
-    const connectedCount = Array.from(session.players.values()).filter((p) => p.connected !== false).length;
-    const totalPlayers = connectedCount || 1;
-    session.distribution = session.distribution.map((item) => ({
-      ...item,
-      percent: Math.round((item.count / totalPlayers) * 100)
-    }));
-
-    const leaderboard = leaderboardFor(session);
-    session.leaderboard = leaderboard;
-
-    io.to(session.code).emit("game:question-results", {
-      correctAnswerId: getCorrectAnswerId(session),
-      distribution: session.distribution,
-      leaderboard
+  if (session.phase === "results") {
+    session.phase = "explanation";
+    const question = session.quiz.questions[session.currentQuestionIndex];
+    const correctAnswers = question.answers.filter((a) => a.is_correct).map((a) => a.text);
+    io.to(session.code).emit("game:explanation", {
+      correctAnswers,
+      hint: question.hint || "",
+      part1: question.explanation_part1 || "",
+      part2: question.explanation_part2 || ""
     });
     return;
   }
-  if (session.phase === "results") {
+  if (session.phase === "explanation") {
     session.currentQuestionIndex += 1;
     if (session.currentQuestionIndex >= session.quiz.questions.length) {
       session.phase = "final";

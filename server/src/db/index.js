@@ -121,7 +121,7 @@ const fixedQuiz = {
       ]
     },
     {
-      text: "Pour faire partie d’un groupe, es-tu obligé de boire une quantité importante d’alcool ou de chanter sur une estrade ?",
+      text: "Pour faire partie d’un groupe, es-tu obligé de boire relever un défi, ou de te laisser humilier  ?",
       hint: "Stop au bizutage",
       explanation_part1: "Obliger une personne à réaliser une action pour intégrer un groupe est un bizutage.",
       explanation_part2: "C’est puni par la loi. Il n’y a pas de bizutage gentil.",
@@ -134,7 +134,7 @@ const fixedQuiz = {
       ]
     },
     {
-      text: "Dans un groupe, tu entends une personne dire : « T’as vu la lopsa. Elle est là que pour pécho. » Quelle est ta réaction ?",
+      text: "Dans un groupe, tu entends une personne dire : « C'est une fille, elle est forcèment nulle, la lutte c'est pour les hommes. » Quelle est ta réaction ?",
       hint: "Non aux discriminations",
       explanation_part1: "Le mieux est l’argumentation pour expliquer pourquoi cette remarque est sexiste.",
       explanation_part2: "Il est important de donner son avis quand le groupe raconte n’importe quoi.",
@@ -150,7 +150,7 @@ const fixedQuiz = {
       ]
     },
     {
-      text: "As-tu le droit de dire ou d’écrire à une personne « Bâtard », « T’es triso », « T’es fraiche », « Tapette », « Sale juif », « Gros tas », « Bigleux » ?",
+      text: "As-tu le droit de dire ou d’écrire à une personne « T’es triso », « T’es fraiche », « Tapette », « Sale juif », « Gros tas », « Bigleux » ?",
       hint: "Non aux discriminations",
       explanation_part1: "Tu n’as pas le droit de les dire, et personne n’a le droit de te les dire.",
       explanation_part2: "Ce sont des propos injurieux, racistes, antisémites, homophobes et sexistes. C’est puni par la loi.",
@@ -193,7 +193,7 @@ const fixedQuiz = {
       ]
     },  
     {
-      text: "Vestiaires — Peux-tu rester seul dans les vestiaires avec un adulte ?",
+      text: "Peux-tu rester seul dans les vestiaires avec un adulte ?",
       hint: "Ton corps t'appartient",
       explanation_part1: "Un adulte n’a pas à être présent seul avec un jeune, dans les vestiaires ou sous la douche. Sauf en cas d’accident.",
       explanation_part2: "Pour se confier ou lors d’un entretien, c’est mieux de se rencontrer dans un bureau entrouvert.",
@@ -206,7 +206,7 @@ const fixedQuiz = {
       ]
     },
     {
-      text: "Douche — Peux-tu, après l’entraînement ou le match, prendre une douche avec ton maillot de bain ?",
+      text: "Peux-tu, après l’entraînement ou le match, prendre une douche avec ton maillot de bain ?",
       hint: "Ton corps t'appartient",
       explanation_part1: "Ta nudité et ta pudeur t’appartiennent.",
       explanation_part2: "Personne ne peut te forcer à prendre une douche nu. N’oublie pas ta serviette : ta nudité peut gêner un copain et elle te protège aussi des photos envoyées sur internet.",
@@ -219,7 +219,7 @@ const fixedQuiz = {
       ]
     },
     {
-      text: "Activités — Sous prétexte de te motiver, ton entraîneur/animateur te pousse : « Mais t’es faible », « Que t’es nul-le », « Tu me déçois, je pensais que tu étais plus fort-e »… Comment réagis-tu ?",
+      text: "Sous prétexte de te motiver, ton entraîneur/animateur te pousse : « Mais t’es faible », « Que t’es nul-le », « Tu me déçois, je pensais que tu étais plus fort-e »… Comment réagis-tu ?",
       hint: "Non au harcèlement",
       explanation_part1: "Pour te faire réagir et te motiver, il-elle aurait pu t’encourager plutôt que t’abaisser car tu te sens blessé-e qu’il-elle ait pu penser ça de toi.",
       explanation_part2: "Abaisser, humilier, de façon répétée est interdit par la loi. C’est du harcèlement moral.",
@@ -232,7 +232,7 @@ const fixedQuiz = {
       ]
     },
     {
-      text: "Activités — Sans mon accord, mon entraîneur/animateur peut-il m’imposer une aide par contact physique ?",
+      text: "Sans mon accord, mon entraîneur/animateur peut-il m’imposer une aide par contact physique ?",
       hint: "Ton corps t'appartient",
       explanation_part1: "L’adulte, pour des raisons techniques et de sécurité doit te demander ton accord et t’expliquer comment il va te tenir.",
       explanation_part2: "Tu as le droit de refuser et de dialoguer car tu peux être mal à l’aise avec ce contact.",
@@ -245,7 +245,7 @@ const fixedQuiz = {
       ]
     },
     {
-      text: "Activités — Ton entraîneur/animateur te demande de poursuivre ton entraînement alors que tu as mal, parce que tu t’es blessé-e, et contre l’avis médical. Que fais-tu ?",
+      text: "Ton entraîneur/animateur te demande de poursuivre ton entraînement alors que tu as mal, parce que tu t’es blessé-e, et contre l’avis médical. Que fais-tu ?",
       hint: "Ton corps t'appartient",
       explanation_part1: "C’est important de respecter ton corps et l’avis médical.",
       explanation_part2: "Ce n’est pas être faible que de respecter ton corps et l’avis médical. Cela te permettra de revenir plus fort encore après la guérison.",
@@ -258,7 +258,7 @@ const fixedQuiz = {
       ]
     },
     {
-      text: "Aide — Besoin d’aide, connais-tu le numéro d’« enfance en danger » ?",
+      text: "Besoin d’aide, connais-tu le numéro d’« enfance en danger » ?",
       hint: "Stop au silence ! Fais le 119",
       explanation_part1: "Si tu vis ou assistes à une situation anormale",
       explanation_part2: "Surtout n’hésite pas à appeler le 119. Gratuit – Anonyme – Confidentiel. Tu auras des conseils et de l’aide.",
@@ -273,7 +273,7 @@ const fixedQuiz = {
       ]
     },
     {
-      text: "Corps — Voici des parties de ton corps. Trouve celles que personne n’a le droit de toucher !",
+      text: "Voici des parties de ton corps. Trouve celles que personne n’a le droit de toucher !",
       hint: "Ton corps t'appartient",
       explanation_part1: "Toucher tes parties intimes sans ton accord est interdit.",
       explanation_part2: "C’est puni par la loi.",
@@ -292,22 +292,7 @@ const fixedQuiz = {
       ]
     },  
     {
-      text: "Aide — Besoin d'aide, connais-tu le numéro d'\"enfance en danger\" ?",
-      hint: "Stop au silence ! Fais le 119",
-      explanation_part1: "Si tu vis ou assistes à une situation anormale",
-      explanation_part2: "Surtout n'hésite pas à appeler le 119",
-      image: "",
-      time_limit: 20,
-      points: 1000,
-      answers: [
-        { text: "110", is_correct: false },
-        { text: "119", is_correct: true },
-        { text: "999", is_correct: false },
-        { text: "09091", is_correct: false }
-      ]
-    },
-    {
-      text: "Activités — Durant l'activité, mon entraîneur/animateur peut me dire...",
+      text: "Durant l'activité, mon entraîneur/animateur peut me dire...",
       hint: "Non aux discriminations",
       explanation_part1:
         "L'adulte doit encourager et peut uniquement faire des remarques sur ton activité et tes performances.",
@@ -325,7 +310,7 @@ const fixedQuiz = {
       ]
     },
     {
-      text: "Bonjour — Pour dire bonjour, ton entraineur/animateur peut...",
+      text: "Pour dire bonjour, ton entraineur/animateur peut...",
       hint: "Ton corps t'appartient",
       explanation_part1: "Personne ne peut t'imposer un contact physique sans ton accord",
       explanation_part2: "Tu as le droit de dire non",

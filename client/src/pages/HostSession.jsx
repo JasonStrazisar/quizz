@@ -63,6 +63,16 @@ export default function HostSession() {
     }
 
     function onCreated(payload) {
+      if (payload.reused && !payload.restarted) {
+        const shouldRestart = window.confirm(
+          "Une session est déjà en cours pour ce quiz.\n\nOK: redémarrer depuis zéro\nAnnuler: continuer la session existante"
+        );
+        if (shouldRestart) {
+          socket.emit("host:restart-session", { identifier: code });
+          return;
+        }
+      }
+
       setStatus("ready");
       setPlayers(
         (payload.players || []).map((player) => ({
@@ -179,6 +189,12 @@ export default function HostSession() {
     socket.emit("host:start-game", { code: localCode });
   }
 
+  function restartSession() {
+    const confirmed = window.confirm("Redémarrer la session et supprimer les joueurs connectés ?");
+    if (!confirmed) return;
+    socket.emit("host:restart-session", { identifier: localCode });
+  }
+
   function nextQuestion() {
     socket.emit("host:next-question", { code: localCode });
   }
@@ -279,13 +295,21 @@ export default function HostSession() {
                 Scanne ce QR code pour rejoindre directement la partie.
               </p>
               <div className="mt-6">
-                <button
-                  onClick={startGame}
-                  className="arena-button bg-ffl-red px-4 py-3 font-bold text-white tracking-wider uppercase"
-                  disabled={players.length === 0}
-                >
-                  Lancer le match
-                </button>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={startGame}
+                    className="arena-button bg-ffl-red px-4 py-3 font-bold text-white tracking-wider uppercase"
+                    disabled={players.length === 0}
+                  >
+                    Lancer le match
+                  </button>
+                  <button
+                    onClick={restartSession}
+                    className="arena-button bg-white/10 border border-white/20 px-4 py-3 font-bold text-white tracking-wider uppercase"
+                  >
+                    Réinitialiser
+                  </button>
+                </div>
               </div>
             </div>
             <div className="sticker p-6">
@@ -400,7 +424,7 @@ export default function HostSession() {
                 ))}
               </div>
               <button onClick={nextQuestion} className="arena-button mt-6 bg-ffl-red px-4 py-2 font-bold text-white tracking-wider uppercase">
-                Question suivante
+                Voir les bonnes réponses
               </button>
             </div>
             <div className="sticker p-6">
@@ -432,7 +456,7 @@ export default function HostSession() {
                 onClick={nextQuestion}
                 className="arena-button mt-8 bg-ffl-red px-5 py-3 text-lg font-bold text-white tracking-wider uppercase"
               >
-                Voir les résultats
+                Question suivante
               </button>
             </div>
           </div>

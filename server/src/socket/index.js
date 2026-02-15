@@ -25,6 +25,7 @@ export default function registerSocket(io) {
         socket.emit("session:created", {
           sessionId: byCode.id,
           code: byCode.code,
+          reused: true,
           ...hostViewState(byCode)
         });
         socket.emit("lobby:wordcloud:update", getWordCloudPayload(byCode));
@@ -40,6 +41,7 @@ export default function registerSocket(io) {
         socket.emit("session:created", {
           sessionId: existing.id,
           code: existing.code,
+          reused: true,
           ...hostViewState(existing)
         });
         socket.emit("lobby:wordcloud:update", getWordCloudPayload(existing));
@@ -58,6 +60,35 @@ export default function registerSocket(io) {
       socket.emit("session:created", {
         sessionId: session.id,
         code: session.code,
+        reused: false,
+        ...hostViewState(session)
+      });
+      socket.emit("lobby:wordcloud:update", getWordCloudPayload(session));
+    });
+
+    socket.on("host:restart-session", ({ identifier }) => {
+      const byCode = getSession(identifier);
+      const quizId = byCode?.quizId || identifier;
+      const existing = listActiveSessionByQuiz(quizId);
+
+      if (existing) {
+        io.to(existing.code).emit("error", { message: "Session redémarrée par l'hôte." });
+        removeSession(existing.code);
+      }
+
+      const session = createSession(quizId, socket.id);
+      if (!session) {
+        socket.emit("error", { message: "Quiz not found" });
+        return;
+      }
+
+      setHost(session, socket.id);
+      socket.join(session.code);
+      socket.emit("session:created", {
+        sessionId: session.id,
+        code: session.code,
+        reused: false,
+        restarted: true,
         ...hostViewState(session)
       });
       socket.emit("lobby:wordcloud:update", getWordCloudPayload(session));
@@ -111,10 +142,7 @@ export default function registerSocket(io) {
       }
 
       if (session.phase === "results") {
-        const question = session.quiz.questions[session.currentQuestionIndex];
-        const correct = question.answers.find((a) => a.is_correct);
         socket.emit("game:question-results", {
-          correctAnswerId: correct?.id || null,
           distribution: session.distribution,
           leaderboard: session.leaderboard
         });
